@@ -24,6 +24,12 @@ public class Book {
         this.year = year;
     }
 
+    public Book(BookPostDTO data){
+        this.title = data.title();
+        this.author = data.author();
+        this.year = data.year();
+    }
+
     public int getId() {
         return id;
     }
