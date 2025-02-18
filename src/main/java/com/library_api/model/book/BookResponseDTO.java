@@ -1,4 +1,4 @@
-package com.library_api.model.Book;
+package com.library_api.model.book;
 
 public record BookResponseDTO(int id, String title, String author, int year) {
     public BookResponseDTO(Book book){

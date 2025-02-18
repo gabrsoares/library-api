@@ -1,6 +1,6 @@
 package com.library_api.repository;
 
-import com.library_api.model.Book.Book;
+import com.library_api.model.book.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

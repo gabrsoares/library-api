@@ -1,10 +1,10 @@
 package com.library_api.controller;
 
 import com.library_api.exception.ErrorResponse;
-import com.library_api.model.Book.Book;
-import com.library_api.model.Book.BookPostDTO;
+import com.library_api.model.book.Book;
+import com.library_api.model.book.BookPostDTO;
 import com.library_api.repository.BookRepository;
-import com.library_api.model.Book.BookResponseDTO;
+import com.library_api.model.book.BookResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
