@@ -1,6 +1,8 @@
 package com.library_api.controller;
 
+import com.library_api.infra.security.TokenService;
 import com.library_api.model.user.AuthenticationDTO;
+import com.library_api.model.user.LoginTokenDTO;
 import com.library_api.model.user.RegisterDTO;
 import com.library_api.model.user.User;
 import com.library_api.repository.UserRepository;
@@ -24,14 +26,16 @@ public class AuthenticationController {
     UserRepository repository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login (@RequestBody @Valid AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword); //o spring já faz esse processo de autenticação automaticamente através da classe Auth
 
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-        //o spring já faz esse processo de autenticação automaticamente através da classe Auth
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok(new LoginTokenDTO(token));
     }
 
     @PostMapping("/register")

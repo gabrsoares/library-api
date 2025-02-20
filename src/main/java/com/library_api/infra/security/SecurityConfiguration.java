@@ -1,9 +1,11 @@
 package com.library_api.infra.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    @Autowired
+    SecurityFilter securityFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -26,7 +30,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/books").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationToken.class)
                 .build();
     }
     //montamos um construtor do authentication manager para podermos utilizar o @autowired nele na classe de authentication controller
