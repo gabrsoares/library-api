@@ -25,11 +25,11 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if(token != null){
             var subject = tokenService.validateToken(token);
-            if(!subject.isEmpty()){
-                UserDetails user = authorizationService.loadUserByUsername(subject);
-                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication); //passa as informações de autenticação pro context do spring security
-            }
+            UserDetails user = authorizationService.loadUserByUsername(subject);
+
+            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication); //passa as informações de autenticação pro context do spring security
+
         }
         filterChain.doFilter(request, response); //continua a validação dos filtros lá no securityConfiguration
     }
@@ -37,6 +37,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private String recoverToken(HttpServletRequest request){
         var authHeader = request.getHeader("Authorization");
         if(authHeader == null) return null;
-        return authHeader.replace("Bearer","");// o token na autenticação é passado como "Bearer {token_value}"
+        return authHeader.replace("Bearer ","");// o token na autenticação é passado como "Bearer {token_value}"
     }
 }
