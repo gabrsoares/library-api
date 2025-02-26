@@ -1,6 +1,6 @@
 package com.library_api.controller;
 
-import com.library_api.exception.ErrorResponse;
+import com.library_api.exception.BookNotFoundException;
 import com.library_api.model.book.Book;
 import com.library_api.model.book.BookPostDTO;
 import com.library_api.repository.BookRepository;
@@ -34,7 +34,7 @@ public class BookController {
             return ResponseEntity.ok(book);
         }
         //Mensagem de erro caso não encontre o livro pelo id
-        return ResponseEntity.ok(new ErrorResponse("Book not found", HttpStatus.NOT_FOUND));
+        throw new BookNotFoundException();
 
     }
 
