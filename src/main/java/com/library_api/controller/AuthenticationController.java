@@ -1,5 +1,7 @@
 package com.library_api.controller;
 
+import com.library_api.exception.RegisteredUserException;
+import com.library_api.exception.UserNotFoundException;
 import com.library_api.infra.security.TokenService;
 import com.library_api.model.user.AuthenticationDTO;
 import com.library_api.model.user.LoginTokenDTO;
@@ -31,16 +33,21 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login (@RequestBody @Valid AuthenticationDTO data){
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword); //o spring já faz esse processo de autenticação automaticamente através da classe Auth
+        try{
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+            var auth = this.authenticationManager.authenticate(usernamePassword);
+            System.out.println(auth);
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            return ResponseEntity.ok(new LoginTokenDTO(token));
+        } catch (Exception ex){
+            throw new UserNotFoundException();
+        }
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginTokenDTO(token));
     }
 
     @PostMapping("/register")
     public ResponseEntity register (@RequestBody @Valid RegisterDTO data){
-        if(repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if(repository.findByLogin(data.login()) != null) throw new RegisteredUserException();
         var encryptedPassword = passwordEncoder.encode(data.password());
         User user = new User(data.login(), encryptedPassword, data.role());
         repository.save(user);

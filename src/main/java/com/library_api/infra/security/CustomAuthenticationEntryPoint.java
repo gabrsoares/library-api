@@ -13,12 +13,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Invalid or expired token", HttpStatus.FORBIDDEN);
-        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
+        ErrorResponseDTO error = new ErrorResponseDTO("Access denied.", HttpStatus.UNAUTHORIZED);
+        var json = new ObjectMapper().writeValueAsString(error);
+        response.getWriter().write(json);
     }
 }

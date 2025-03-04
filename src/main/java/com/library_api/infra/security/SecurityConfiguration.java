@@ -21,8 +21,9 @@ public class SecurityConfiguration {
     @Autowired
     SecurityFilter securityFilter;
     @Autowired
-    TokenAuthenticationEntryPoint tokenEntryPoint;
-
+    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    @Autowired
+    CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -34,9 +35,11 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/books").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception -> exception //exibe a mensagem de erro dentro do response da API
-                        .authenticationEntryPoint(tokenEntryPoint)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
+
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
