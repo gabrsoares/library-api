@@ -30,6 +30,12 @@ public class Book {
         this.year = data.year();
     }
 
+    public void updateBook(BookSelectDTO data){
+        this.title = data.title();
+        this.author = data.author();
+        this.year = data.year();
+    }
+
     public int getId() {
         return id;
     }

@@ -32,7 +32,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/auth/delete").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/books").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/books").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/books").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

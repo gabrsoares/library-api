@@ -31,7 +31,6 @@ public class SecurityFilter extends OncePerRequestFilter {
             if(token != null) {
                 var subject = tokenService.validateToken(token);
                 UserDetails user = authorizationService.loadUserByUsername(subject);
-
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication); //passa as informações de autenticação pro context do spring security
             }

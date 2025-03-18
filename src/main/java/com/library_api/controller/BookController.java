@@ -1,16 +1,18 @@
 package com.library_api.controller;
 
 import com.library_api.exception.BookNotFoundException;
+import com.library_api.exception.InvalidBodyFormatException;
 import com.library_api.model.book.Book;
 import com.library_api.model.book.BookPostDTO;
+import com.library_api.model.book.BookSelectDTO;
 import com.library_api.repository.BookRepository;
 import com.library_api.model.book.BookResponseDTO;
-import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.InputMismatchException;
 import java.util.List;
 
 @RestController()
@@ -20,14 +22,14 @@ public class BookController {
     BookRepository repository;
 
     @GetMapping
-    public ResponseEntity getAllBooks(){
-        List<BookResponseDTO> allBooks = this.repository.findAll().stream().map(BookResponseDTO::new).toList();
+    public ResponseEntity<List<BookResponseDTO>> getAllBooks(){
+        List<BookResponseDTO> allBooks = this.repository.findAllByOrderByIdAsc().stream().map(BookResponseDTO::new).toList();
 
         return ResponseEntity.ok(allBooks);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getBookById(@PathVariable int id){
+    public ResponseEntity<Book> getBookById(@PathVariable int id){
         if(this.repository.findById(id).isPresent()){
             Book book = this.repository.findById(id).get();
 
@@ -39,10 +41,33 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity postBook(@RequestBody @Valid BookPostDTO data){
-        Book book = new Book(data);
+    public ResponseEntity postBook(@RequestBody BookPostDTO data){
+        try{
+            Book book = new Book(data);
 
+            this.repository.save(book);
+
+            return ResponseEntity.ok().build();
+        }catch (InputMismatchException ex){
+            throw new InvalidBodyFormatException();
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity updateBook(@RequestBody BookSelectDTO data){
+        Book book = this.repository.findById(data.id())
+                .orElseThrow(BookNotFoundException::new);
+
+        book.updateBook(data);
         this.repository.save(book);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteBook(@RequestBody BookSelectDTO data){
+        Book book = this.repository.findById(data.id()).orElseThrow(BookNotFoundException::new);
+        this.repository.delete(book);
 
         return ResponseEntity.ok().build();
     }
