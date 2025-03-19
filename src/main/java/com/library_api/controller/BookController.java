@@ -64,9 +64,9 @@ public class BookController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteBook(@RequestBody BookSelectDTO data){
-        Book book = this.repository.findById(data.id()).orElseThrow(BookNotFoundException::new);
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteBook(@PathVariable int id){
+        Book book = this.repository.findById(id).orElseThrow(BookNotFoundException::new);
         this.repository.delete(book);
 
         return ResponseEntity.ok().build();
