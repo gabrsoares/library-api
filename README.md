@@ -179,4 +179,4 @@ Para contribuir diretamente, faça um _fork_ do projeto, crie uma _branch_ e env
 
 ## Agradecimentos
 
-Um agradecimento especial ao [Fernanda Kipper](https://www.youtube.com/@kipperdev) pelas aulas incríveis que foram fundamentais para a criação desta API.  
+Um agradecimento especial a [Fernanda Kipper](https://www.youtube.com/@kipperdev) pelas aulas incríveis que foram fundamentais para a criação desta API.  
