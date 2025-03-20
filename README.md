@@ -160,7 +160,7 @@ API para gerenciamento de livros, permitindo cadastrar, atualizar, buscar e excl
 }
 ```
 
-### Erros de sintaxe ou por má formação de JSON não serão exibidos.
+### Erros de sintaxe ou por má formação de JSON não serão exibidos em formato JSON.
 
 ---
 
